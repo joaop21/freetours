@@ -13,11 +13,12 @@ public class City{
     private int id;
     @NotNull
     private String name;
+
     @NotNull
     private double latitude;
     @NotNull
     private double longitude;
-
+  
     @OneToOne
     @NotNull
     private Country country;
