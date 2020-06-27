@@ -27,9 +27,26 @@
         >
         </v-text-field>
         <v-spacer></v-spacer>
+        <div
+        v-if="this.user==''"
+        >
+        <router-link
+        :to = "{path : '/signup'}"
+        class = "router-link"
+        >
+            <v-btn
+            text
+            >
+                Sign Up
+            </v-btn>
+        </router-link>
         <Login
             class = "login"
         />
+        </div>
+        <div
+        v-else
+        >
         <router-link
         :to = "{path : '/createtour'}"
         class = "router-link"
@@ -47,24 +64,34 @@
             <v-btn
             text
             >
-                Username
+                {{ user }}
             </v-btn>
         </router-link>
         <v-btn
         text
+        v-on:click="logout()"
         >
             Logout
         </v-btn>
+        </div>
         </v-app-bar>
     </div>
 </template>
 
 <script>
+import AuthService from '../services/auth_service';
 import Login from "./Login";
 
 export default {
     name : "Header",
     components: {Login},
+    computed : {
+        user : function() {
+            return this.$store.state.username;
+        }
+    },
+    async created () {
+    },
     data: () => ({
         links : [
             {
@@ -72,7 +99,13 @@ export default {
                 link : "/"
             }
         ]
-    })
+    }),
+    methods : { 
+        logout: async function() {
+            AuthService.logout();
+            this.$router.push('/');
+        }
+    }
 }
 </script>
 

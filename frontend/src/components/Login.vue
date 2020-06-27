@@ -87,7 +87,11 @@ export default {
         login: async function () {
             this.status = await AuthService.login(this.user)
             switch (this.status) {
-
+                case 200:
+                    this.dialog = false;
+                    this.$router.push('/');
+                    console.log('Login: 200!');
+                    break;
                 case 401:
                     this.message = "*Invalid Credentials";
                     break;
@@ -96,7 +100,7 @@ export default {
                     this.message = "*Username doesn't exist";
                     break;
             }
-        }
+        },
     }
 }
 </script>
