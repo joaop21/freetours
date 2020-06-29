@@ -145,6 +145,22 @@ public class User implements UserDetails {
         this.tours = tours;
     }
 
+    @Override
+    public String toString() {
+        return "User{\n" +
+                "username='" + username + "'\n" +
+                ", password='" + password + "'\n" +
+                ", email='" + email + "'\n" +
+                ", phoneNumber='" + phoneNumber + "'\n" +
+                ", dateOfBirth=" + dateOfBirth + "\n" +
+                ", aboutMe='" + aboutMe + "'\n" +
+                ", image='" + image + "'\n" +
+                ", languages=" + languages + "\n" +
+                ", schedules=" + schedules + "\n" +
+                ", tours=" + tours + "\n" +
+                '}' + "\n";
+    }
+
     public void addTour(Tour tour) {this.tours.add(tour);}
 
     public void addScheduling(Scheduling scheduling) {this.schedules.add(scheduling);}
