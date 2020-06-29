@@ -103,7 +103,7 @@ INSERT INTO country(name, continent_id) VALUES ('Switzerland',(SELECT id FROM co
 INSERT INTO country(name, continent_id) VALUES ('United States',(SELECT id FROM continent WHERE name='America'));
 INSERT INTO country(name, continent_id) VALUES ('Guinea-Bissau',(SELECT id FROM continent WHERE name='Africa'));
 INSERT INTO country(name, continent_id) VALUES ('Sao Tome and Principe',(SELECT id FROM continent WHERE name='Africa'));
-INSERT INTO country(name, continent_id) VALUES ('Trinidad and Tobago'),(SELECT id FROM continent WHERE name='America');
+INSERT INTO country(name, continent_id) VALUES ('Trinidad and Tobago',(SELECT id FROM continent WHERE name='America'));
 INSERT INTO country(name, continent_id) VALUES ('Singapore',(SELECT id FROM continent WHERE name='Asia'));
 INSERT INTO country(name, continent_id) VALUES ('Sweden',(SELECT id FROM continent WHERE name='Europe'));
 INSERT INTO country(name, continent_id) VALUES ('Slovakia',(SELECT id FROM continent WHERE name='Europe'));
