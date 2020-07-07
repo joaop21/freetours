@@ -1,14 +1,15 @@
 package backendApplication.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity(name="User_")
@@ -27,10 +28,24 @@ public class User implements UserDetails {
     private String aboutMe;
     private String image;
 
-    @OneToMany
-    private List<Language> languages;
+    @ManyToMany(
+            fetch = FetchType.EAGER
+    )
+    @JoinTable(
+            name = "user__languages",
+            joinColumns = @JoinColumn(name = "user_username", referencedColumnName = "username"),
+            inverseJoinColumns = @JoinColumn(name = "language_id", referencedColumnName = "id"),
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"user_username", "language_id"})}
+    )
+    private Set<Language> user__languages;
 
-    @ManyToMany
+    @OneToMany
+    @JsonIgnore
+    private List<Scheduling> schedules;
+
+    @OneToMany(
+            fetch = FetchType.EAGER
+    )
     private List<Scheduling> schedules;
 
     @ManyToMany
@@ -120,12 +135,12 @@ public class User implements UserDetails {
         this.image = image;
     }
 
-    public List<Language> getLanguages() {
-        return languages;
+    public Set<Language> getLanguages() {
+        return user__languages;
     }
 
-    public void setLanguages(List<Language> languages) {
-        this.languages = languages;
+    public void setLanguages(Set<Language> languages) {
+        this.user__languages = languages;
     }
 
     public List<Scheduling> getSchedules() {
@@ -154,7 +169,7 @@ public class User implements UserDetails {
                 ", dateOfBirth=" + dateOfBirth + "\n" +
                 ", aboutMe='" + aboutMe + "'\n" +
                 ", image='" + image + "'\n" +
-                ", languages=" + languages + "\n" +
+                ", languages=" + user__languages + "\n" +
                 ", schedules=" + schedules + "\n" +
                 ", tours=" + tours + "\n" +
                 '}' + "\n";

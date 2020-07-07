@@ -1,14 +1,17 @@
 package backendApplication.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.List;
 import java.util.Set;
 
 @Entity(name = "Tour")
-public class Tour {
+public class Tour implements Serializable {
     @Id
     //@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="tour_sequence")
     //@SequenceGenerator(name="tour_sequence", sequenceName="tour_seq")
@@ -45,9 +48,18 @@ public class Tour {
     @NotNull
     private Category category;
 
-    @OneToMany
+    @ManyToMany(
+            fetch = FetchType.EAGER
+    )
+    @JoinTable(
+            name = "tour_languages",
+            joinColumns = @JoinColumn(name = "tour_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "language_id", referencedColumnName = "id"),
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"tour_id", "language_id"})}
+    )
     @NotNull
-    private List<Language> languages;
+    @JsonIgnoreProperties({"tours"})
+    private Set<Language> languages;
 
     @OneToMany
     private List<Review> reviews;
@@ -157,11 +169,11 @@ public class Tour {
         this.category = category;
     }
 
-    public List<Language> getLanguages() {
+    public Set<Language> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(List<Language> languages) {
+    public void setLanguages(Set<Language> languages) {
         this.languages = languages;
     }
 
