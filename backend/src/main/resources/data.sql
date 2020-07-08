@@ -16,8 +16,6 @@ INSERT INTO continent(name) values ('America');
 
 -- Country
 
-/*
-
 INSERT INTO country(name, continent_id) VALUES ('Malaysia',(SELECT id FROM continent WHERE name='Asia'));
 INSERT INTO country(name, continent_id) VALUES ('Eritrea',(SELECT id FROM continent WHERE name='Africa'));
 INSERT INTO country(name, continent_id) VALUES ('Angola',(SELECT id FROM continent WHERE name='Africa'));
@@ -10526,8 +10524,6 @@ INSERT INTO city(country_id, latitude, longitude, name) VALUES ((SELECT id FROM 
 INSERT INTO city(country_id, latitude, longitude, name) VALUES ((SELECT id FROM country WHERE name='Mexico'), 31.73333, -106.48333, 'Ciudad Juárez');
 INSERT INTO city(country_id, latitude, longitude, name) VALUES ((SELECT id FROM country WHERE name='Sweden'), 59.36667, 18.13333, 'Lidingö');
 INSERT INTO city(country_id, latitude, longitude, name) VALUES ((SELECT id FROM country WHERE name='Argentina'), -33.13067, -64.34992, 'Río Cuarto');
-
-*/
 
 -- Place
 
