@@ -39,16 +39,15 @@ public class User implements UserDetails {
     )
     private Set<Language> user__languages;
 
-    @OneToMany
     @JsonIgnore
-    private List<Scheduling> schedules;
-
     @OneToMany(
             fetch = FetchType.EAGER
     )
     private List<Scheduling> schedules;
 
-    @ManyToMany
+    @ManyToMany(
+            fetch = FetchType.EAGER
+    )
     private List<Tour> tours;
 
     public User() {
