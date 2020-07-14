@@ -38,7 +38,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(User u){
+    public User(User u) {
         this.username = u.getUsername();
         this.password = u.getPassword();
         this.email = u.getEmail();
@@ -170,6 +170,11 @@ public class User implements UserDetails {
                 ", schedules=" + schedules + "\n" +
                 ", tours=" + tours + "\n" +
                 '}' + "\n";
+    }
+
+    @Override
+    public Object clone(){
+        return new User(this);
     }
 
     public void addTour(Tour tour) {this.tours.add(tour);}
