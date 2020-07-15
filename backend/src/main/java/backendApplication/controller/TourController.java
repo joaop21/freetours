@@ -22,6 +22,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.*;
+import java.util.stream.Collectors;
+
 
 
 @RestController
@@ -108,13 +110,31 @@ public class TourController {
     }
 
     @RequestMapping(value = "/tour/{idTour}", method = RequestMethod.GET)
-    public Tour getTour(@PathVariable(value="idTour") String id) {
+    public Map<String, Object> getTour(@PathVariable(value="idTour") String id) {
         try{
+            Map<String, Object> r = new HashMap<>();
+
             // Get tour
             Tour t = tourService.get(Integer.parseInt(id));
 
             // Recursion problem
             Tour tour = (Tour) t.clone();
+            List<Tour> moreToursBy = tour.getGuide().getTours()
+                    .stream().filter(t1 -> t1.getActive().size() != 0 )
+                    .map(t1 -> {
+                        t1 = (Tour) t1.clone();
+                        t1.setFinished(null);
+                        t1.setActive(null);
+                        t1.setCategory(null);
+                        t1.setCity(null);
+                        t1.setLanguages(null);
+                        t1.setReviews(null);
+                        t1.setLanguages(null);
+                        t1.setGuideUsername(null);
+                        t1.setRoute(null);
+                        return t1;
+                    })
+                    .collect(Collectors.toList());
             tour.getCity().setTours(null);
             tour.getGuide().setSchedules(null);
             tour.getGuide().setTours(null);
@@ -126,7 +146,11 @@ public class TourController {
                 }
             }
 
-            return tour;
+
+            r.put("tour", tour);
+            r.put("moreToursBy", moreToursBy);
+
+            return r;
         }catch (NoSuchElementException e) {
             throw new NotFoundException();
         }
