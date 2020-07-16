@@ -68,10 +68,13 @@ public class TourController {
             userService.save(user);
 
             // Save tour on city
+            //se a cidade nao existir criar !!!! adicionar
+            System.out.println(tour.getCity().getId() + tour.getCity().getName());
             City city = cityService.get(tour.getCity().getId());
             city.addTour(tour);
             cityService.save(city);
         }catch (Exception ex) {
+            ex.printStackTrace();
             return -1;
         }
         return tour.getId();
@@ -156,8 +159,8 @@ public class TourController {
         }
     }
 
-    @RequestMapping(value = "/tour/{idTour}", method = RequestMethod.POST)
-    public ResponseEntity<HttpStatus> registerScheduling(@PathVariable(value="idTour") String id, @RequestBody RegisterScheduling s) {
+    @RequestMapping(value = "/schedule_signin", method = RequestMethod.POST)
+    public ResponseEntity<HttpStatus> registerScheduling(@RequestBody RegisterScheduling registerScheduling) {
 
         Scheduling register = null;
         try {
@@ -165,38 +168,31 @@ public class TourController {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.get(username);
 
+            // Get selected scheduling
+            register = schedulingService.get(registerScheduling.getScheduleId());
+
             // Get tour
-            Tour tour = tourService.get(Integer.parseInt(id));
+            Tour tour = register.getTour();
 
             // If not the tour guide ...
             if(username.equals(tour.getGuide().getUsername()))
                 return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 
-            // Get active schedulings on tour
-            Set<Scheduling> schedulings = tour.getActive();
-
-            // Get selected scheduling
-            for (Scheduling scheduling : schedulings){
-                if(s.getDate().equals(scheduling.getDate()))
-                    register = scheduling;
-                break;
-            }
-
             // Check capacity
             int maxCapacity = tour.getMaxCapacity();
 
-            if (register.getSignees().size() + s.getNrPeople() < maxCapacity) {
+            if (register.getSignees().size() + registerScheduling.getNrPeople() < maxCapacity) {
                 // Save scheduling on user
                 user.addScheduling(register);
                 userService.save(user);
 
                 // Add user to signee list
-                for (int i = 0; i < s.getNrPeople(); i++)
+                for (int i = 0; i < registerScheduling.getNrPeople(); i++)
                     register.addSignee(user);
             }
             else {
                 // Add user to waiting queue
-                for(int i=0; i<s.getNrPeople(); i++)
+                for(int i=0; i< registerScheduling.getNrPeople(); i++)
                     register.addQueue(user);
             }
 
@@ -238,8 +234,8 @@ public class TourController {
         }
     }
 
-    @RequestMapping(value = "/tour/{idTour}/unsubscribe", method = RequestMethod.POST)
-    public ResponseEntity<HttpStatus> unsubscribeScheduling(@PathVariable(value="idTour") String id, @RequestBody RegisterScheduling s) {
+    @RequestMapping(value = "/schedule/unsubscribe", method = RequestMethod.POST)
+    public ResponseEntity<HttpStatus> unsubscribeScheduling(RegisterScheduling registerScheduling) {
 
         Scheduling register = null;
         try {
@@ -247,18 +243,13 @@ public class TourController {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.get(username);
 
-            // Get tour
-            Tour tour = tourService.get(Integer.parseInt(id));
-
-            // Get active schedulings on tour
-            Set<Scheduling> schedulings = tour.getActive();
-
             // Get selected scheduling
-            for (Scheduling scheduling : schedulings) {
-                if (s.getDate().equals(scheduling.getDate()))
-                    register = scheduling;
-                break;
-            }
+            register = schedulingService.get(registerScheduling.getScheduleId());
+
+
+            // Get tour
+            Tour tour = register.getTour();
+
 
             // If less than 24 hours to tour ...
             LocalDateTime now = LocalDateTime.now();
@@ -279,7 +270,7 @@ public class TourController {
                 }
 
                 // Delete scheduling
-                tour.removeActive(register);
+                tour.removeActive(register.getId());
                 tourService.save(tour);
                 schedulingService.delete(register.getId());
 
@@ -290,14 +281,14 @@ public class TourController {
                 userService.save(user);
 
                 // Remove user/users from signee list
-                for (int i = 0; i < s.getNrPeople(); i++)
+                for (int i = 0; i < registerScheduling.getNrPeople(); i++)
                     register.removeSignee(user);
 
                  // If exists users in queue ...
                 if(!register.getQueue().isEmpty()) {
 
                     // New user/users in waiting queue to signee list
-                    List<User> newSignees = register.getQueue().subList(0, s.getNrPeople());
+                    List<User> newSignees = register.getQueue().subList(0, registerScheduling.getNrPeople());
 
                     // Add user/users to signee list
                     for (User u : newSignees) {
