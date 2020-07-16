@@ -37,7 +37,7 @@ public class SwapManager {
         try {
             Thread.sleep(finishesIn);
             Tour t = tourService.get(scheduling.getTour().getId());
-            t.removeActive(scheduling.getId());
+            t.removeActive(scheduling);
             t.addFinished((Scheduling) scheduling.clone());
             tourService.save(t);
             System.out.println("completou o schedule");
