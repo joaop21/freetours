@@ -31,7 +31,7 @@ const routes = [
   },
   {
     name : "Search",
-    path : "/search",
+    path : "/search/:destination?/:fromDate?/:category?",
     component : Search
   },
   {

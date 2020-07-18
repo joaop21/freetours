@@ -1,9 +1,11 @@
 package backendApplication.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
 
@@ -244,6 +246,19 @@ public class Tour implements Serializable {
         return new Tour(this);
     }
 
+    @JsonIgnore
+    public boolean hasActiveAfter(LocalDate fromDate) {
+        return this.active.stream().filter(s -> s.getDate().isAfter(fromDate.atStartOfDay()))
+                .count() > 0;
+    }
+
+    @JsonIgnore
+    public boolean hasActiveBefore(LocalDate untilDate) {
+        return this.active.stream().filter(s -> s.getDate().isBefore(untilDate.atStartOfDay()))
+                .count() > 0;
+    }
+
+    @JsonIgnore
     public float computeRating() {
 
         float sum = 0;

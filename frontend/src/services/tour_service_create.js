@@ -5,7 +5,7 @@ const API_URL = process.env.VUE_APP_API_URL
 
 class TourServiceCreate {
 
-    createTour(tour) {
+    async createTour(tour) {
         // Duration
         if(tour.duration_hours.length==1) tour.duration_hours = "0".concat(tour.duration_hours);
         if(tour.duration_minutes.length==1) tour.duration_minutes = "0".concat(tour.duration_minutes);
