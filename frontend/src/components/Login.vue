@@ -26,7 +26,7 @@
                                 name="username"
                                 type="text"
                                 class = "pt-12"
-                                @input="message = ''"
+                                @input="restore_variables()"
                                 required
                                 :rules = "[rules.required]"
                         />
@@ -39,12 +39,25 @@
                                 name="password"
                                 type="password"
                                 class = "pt-6"
-                                @input="message = ''"
+                                @input="restore_variables()"
                                 required
                                 :rules = "[rules.required]"
                             />
                         </v-card-text>
-                    <v-card-text class="red--text" v-if="message">{{message}}</v-card-text>
+                    <v-alert
+                            dismissible
+                            v-if = 'success'
+                            type = 'success'
+                    >
+                        {{ this.message }}
+                    </v-alert>
+                    <v-alert
+                            dismissible
+                            v-if = 'error'
+                            type = 'error'
+                    >
+                        {{ this.message }}
+                    </v-alert>
                     <v-card-actions>
                         <v-layout justify-center>
                             <v-btn
@@ -88,7 +101,9 @@ export default {
     data: () => ({
         dialog: false,
         user: new User('', '', ''),
-        message: '',
+        success : false,
+        error : false,
+        message: "",
         isFormValid : true,
         rules : { 
             required: value => !!value || 'Required field.',
@@ -97,19 +112,23 @@ export default {
     methods: {
         // Login when called
         login: async function () {
+            this.success = this.error = false
             this.status = await AuthService.login(this.user)
             switch (this.status) {
                 case 200:
+                    this.success = true;
                     this.dialog = false;
                     this.$router.push('/');
                     console.log('Login: 200!');
                     break;
                 case 401:
-                    this.message = "*Invalid Credentials";
+                    this.error = true;
+                    this.message = "Invalid Credentials";
                     break;
 
                 case 403:
-                    this.message = "*Username doesn't exist";
+                    this.error = true;
+                    this.message = "Username doesn't exist";
                     break;
             }
         },
@@ -117,6 +136,10 @@ export default {
         forgot_password: function () {
             this.dialog = false
             this.$router.push('/forgotpassword')
+        },
+        restore_variables: function () {
+            this.success = this.error = false
+            this.message = ""
         }
     }
 }
