@@ -55,7 +55,7 @@ public class SwapManager {
             Tour t = tourService.get(scheduling.getTour().getId());
             t.removeActive(scheduling);
             t.addFinished((Scheduling) scheduling.clone());
-            tourService.save(t);
+            //tourService.save(t);
 
             sendReviewMail(t, scheduling);
 
@@ -84,11 +84,11 @@ public class SwapManager {
             review.setToken(token);
             review.setUser(user);
             review.setTour(tour);
-            reviewService.save(new Review());
+            reviewService.save(review);
 
             // link review to the specific tour
             tour.addReview(review);
-            //tourService.save(tour);
+            tourService.save(tour);
 
             // send email
             EmailDirector builder = new EmailDirector(new ReviewEmail());
