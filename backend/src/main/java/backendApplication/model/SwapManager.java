@@ -55,7 +55,7 @@ public class SwapManager {
             Tour t = tourService.get(scheduling.getTour().getId());
             t.removeActive(scheduling);
             t.addFinished((Scheduling) scheduling.clone());
-            tourService.save(t);
+            //tourService.save(t);
 
             sendReviewMail(t, scheduling);
 
