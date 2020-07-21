@@ -200,6 +200,7 @@ public class TourController {
                     })
                     .collect(Collectors.toList());
             tour.getCity().setTours(null);
+            tour.setFinished(null);
             tour.getGuide().setSchedules(null);
             tour.getGuide().setTours(null);
             Set<Scheduling> sCs = new HashSet<>();
