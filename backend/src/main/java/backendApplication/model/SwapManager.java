@@ -87,7 +87,7 @@ public class SwapManager {
             reviewService.save(review);
 
             // link review to the specific tour
-            tour.addReview(review);
+            //tour.addReview(review);
             //tourService.save(tour);
 
             // send email
