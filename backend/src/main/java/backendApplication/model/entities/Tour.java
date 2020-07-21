@@ -53,7 +53,7 @@ public class Tour implements Serializable {
     @NotNull
     private Set<Language> languages;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<Review> reviews;
 
     @OneToMany(fetch = FetchType.EAGER)
