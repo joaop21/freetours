@@ -239,8 +239,10 @@ export default {
             this.spoken_languages = profile.data.languages
             this.aboutMe = profile.data.aboutMe
             console.log(profile.data)
-            const aux = profile.data.schedules ? profile.data.schedules.filter( s => new Date(s.date) > new Date() ).map(s => s.tour) : []
-            const aux2 = profile.data.schedules ? profile.data.schedules.filter( s => new Date(s.date) <= new Date() ).map(s => s.tour) : []
+            const dateNow = new Date()
+            dateNow.setHours(dateNow.getHours() + 1)
+            const aux = profile.data.schedules ? profile.data.schedules.filter( s => new Date(s.date) > dateNow ).map(s => s.tour) : []
+            const aux2 = profile.data.schedules ? profile.data.schedules.filter( s => new Date(s.date) <= dateNow ).map(s => s.tour) : []
             const aux3 = profile.data.schedules ? profile.data.schedules.map(s => s.tour) : []
             this.tours = [
                             aux3.concat(profile.data.tours),

@@ -45,12 +45,11 @@ export default {
         tourSignIn: async function () {
             if(this.$props.signeesSize + this.participants > this.$props.maxCapacity){
                 var possibleParticipants = this.$props.maxCapacity - this.$props.signeesSize;
-                if(possibleParticipants > 0 && this.participants < this.$props.maxCapacity)
-                    this.message = "*Tour capacity exceeded, your " + this.participants + " participants are waiting on queue." + " For now, you can only subscribe " + possibleParticipants + ".";
-                else if (this.participants > this.$props.maxCapacity && possibleParticipants > 0)
+                if (this.participants > this.$props.maxCapacity)
                     this.message = "*Impossible. Tour capacity exceeded."
-                else if(possibleParticipants == 0) 
-                    this.message = "*Tour capacity exceeded, you can not subscribe any participant."
+                else
+                    this.message = "*Tour capacity exceeded, your " + this.participants + " participants are waiting on queue." + " For now, you can only subscribe " + possibleParticipants + ".";
+
             }else this.message = '';
             
             const resp = await schedule_signin.scheduleSignIn(this.$props.id, this.participants)

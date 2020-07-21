@@ -2,6 +2,7 @@ package backendApplication.model;
 
 
 import backendApplication.model.dao.ReviewService;
+import backendApplication.model.dao.SchedulingService;
 import backendApplication.model.dao.TourService;
 import backendApplication.model.emailBuilder.Email;
 import backendApplication.model.emailBuilder.EmailDirector;
@@ -36,6 +37,9 @@ public class SwapManager {
     @Autowired
     private Environment env;
 
+    @Autowired
+    private SchedulingService schedulingService;
+
     @Async("threadPoolTaskExecutor")
     public void addSchedule(Scheduling scheduling){
         //long finishesIn = scheduling.getDate().getTime() - new Date().getTime();
@@ -62,6 +66,8 @@ public class SwapManager {
 
     private void sendReviewMail(Tour tour, Scheduling scheduling) {
 
+        scheduling = schedulingService.get(scheduling.getId());
+
         for(User user : scheduling.getSignees()) {
 
             // create a review
@@ -78,11 +84,11 @@ public class SwapManager {
             review.setToken(token);
             review.setUser(user);
             review.setTour(tour);
-            reviewService.save(new Review());
+            reviewService.save(review);
 
             // link review to the specific tour
-            tour.addReview(review);
-            tourService.save(tour);
+            //tour.addReview(review);
+            //tourService.save(tour);
 
             // send email
             EmailDirector builder = new EmailDirector(new ReviewEmail());

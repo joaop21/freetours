@@ -24,7 +24,7 @@ public class Scheduling {
     @ManyToMany
     private List<User> queue;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<User> signees;
 
     public Scheduling() {

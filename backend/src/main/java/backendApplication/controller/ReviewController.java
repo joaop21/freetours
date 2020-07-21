@@ -47,6 +47,7 @@ public class ReviewController {
 
         // compute ratings
         Tour tour = review1.getTour();
+        tour.addReview(review1);
         tour.setRating(tour.computeRating());
         tourService.save(tour);
         User guide = tour.getGuide();
