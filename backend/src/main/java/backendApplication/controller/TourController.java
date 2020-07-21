@@ -215,9 +215,14 @@ public class TourController {
                 sCs.add(sC);
             }
             tour.setActive(sCs);
-            for (Review review : tour.getReviews())
+            for (Review review : tour.getReviews()) {
                 review.setTour(null);
-
+                User u = (User) review.getUser().clone();
+                u.setSchedules(null);
+                u.setTours(null);
+                u.setLanguages(null);
+                review.setUser(u);
+            }
 
             r.put("tour", tour);
             r.put("moreToursBy", moreToursBy);
